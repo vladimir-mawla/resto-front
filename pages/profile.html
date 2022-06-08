@@ -64,6 +64,7 @@
                 </form>
               </div>
           </div>
+          <button id="postFetchAPI" class="btn btn-primary btn-block">Done</button>
         </div>
         <hr>
 
@@ -91,7 +92,7 @@
                     method: 'post',
                     credentials: "same-origin",
                     body: JSON.stringify({
-
+                        user_id: user_id,
                         name: name.value,
                         email: email.value
                     })
@@ -102,13 +103,9 @@
                             status: response.status
                         })
                         )).then(res => {
-                            
+                            location.href = "./user.html"
                             console.log(res.data)
-                            if(res.data["status"]=="Success"){
-                                location.href = "./user.html"
-                            }else {
-                                alert("User not Found")
-                            }
+
                         })
                     .catch(function (error) {
                         console.log(error);

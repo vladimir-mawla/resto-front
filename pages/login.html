@@ -95,6 +95,9 @@
                         
                         console.log(res.data)
                         if(res.data["status"]=="Success"){
+                            
+                            localStorage.setItem('user_id', res.data["user_id"]);
+                            
                             location.href = "./user.html"
                         }else {
                             alert("User not Found")
