@@ -3,8 +3,7 @@
 
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!------ Include the above in your HEAD tag ---------->
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
@@ -32,7 +31,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                         </div>
-                        <input name="" class="form-control" placeholder="Email address" type="email">
+                        <input id="li_email" class="form-control" placeholder="Email address" type="email">
                     </div> <!-- form-group// -->
 
 
@@ -40,14 +39,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                         </div>
-                        <input class="form-control" placeholder="Create password" type="password">
+                        <input id="li_password" class="form-control" placeholder="Create password" type="password">
                     </div> <!-- form-group// -->
                     <div class="form-group input-group">
 
 
                     </div> <!-- form-group// -->
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block"> Create Account </button>
+                        <button id="postFetchAPI" class="btn btn-primary btn-block"> Log In </button>
                     </div> <!-- form-group// -->
                     <p class="text-center">Don't have an account? <a href="">Log In</a> </p>
                 </form>
@@ -61,6 +60,51 @@
 
     <br><br>
     </article>
+    <script>
+
+
+
+        document.getElementById('postFetchAPI').addEventListener('click', onClick);
+        let url = 'http://127.0.0.1:8000/api/login';
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        function onClick(event) {
+            event.preventDefault();
+            console.log("hello")
+            var email = document.getElementById("li_email")
+            var password = document.getElementById("li_password")
+            fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json, text-plain, /",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": token
+                },
+                method: 'post',
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    email: email.value,
+                    password: password.value
+                })
+            })
+                .then(response =>
+                    response.json().then(data => ({
+                        data: data,
+                        status: response.status
+                    })
+                    )).then(res => {
+                        
+                        console.log(res.data)
+                        if(res.data["status"]=="Success"){
+                            location.href = "./user.html"
+                        }else {
+                            alert("User not Found")
+                        }
+                    })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    </script>
 </body>
 
 </html>
